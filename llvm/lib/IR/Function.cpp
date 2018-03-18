@@ -650,30 +650,31 @@ enum IIT_Info {
 
   // Values from 16+ are only encodable with the inefficient encoding.
   IIT_V64  = 16,
-  IIT_MMX  = 17,
-  IIT_TOKEN = 18,
-  IIT_METADATA = 19,
-  IIT_EMPTYSTRUCT = 20,
-  IIT_STRUCT2 = 21,
-  IIT_STRUCT3 = 22,
-  IIT_STRUCT4 = 23,
-  IIT_STRUCT5 = 24,
-  IIT_EXTEND_ARG = 25,
-  IIT_TRUNC_ARG = 26,
-  IIT_ANYPTR = 27,
-  IIT_V1   = 28,
-  IIT_VARARG = 29,
-  IIT_HALF_VEC_ARG = 30,
-  IIT_SAME_VEC_WIDTH_ARG = 31,
-  IIT_PTR_TO_ARG = 32,
-  IIT_PTR_TO_ELT = 33,
-  IIT_VEC_OF_ANYPTRS_TO_ELT = 34,
-  IIT_I128 = 35,
-  IIT_V512 = 36,
-  IIT_V1024 = 37,
-  IIT_STRUCT6 = 38,
-  IIT_STRUCT7 = 39,
-  IIT_STRUCT8 = 40
+  IIT_MMX,
+  IIT_TOKEN,
+  IIT_DEP,
+  IIT_METADATA,
+  IIT_EMPTYSTRUCT,
+  IIT_STRUCT2,
+  IIT_STRUCT3,
+  IIT_STRUCT4,
+  IIT_STRUCT5,
+  IIT_EXTEND_ARG,
+  IIT_TRUNC_ARG,
+  IIT_ANYPTR,
+  IIT_V1,
+  IIT_VARARG,
+  IIT_HALF_VEC_ARG,
+  IIT_SAME_VEC_WIDTH_ARG,
+  IIT_PTR_TO_ARG,
+  IIT_PTR_TO_ELT,
+  IIT_VEC_OF_ANYPTRS_TO_ELT,
+  IIT_I128,
+  IIT_V512,
+  IIT_V1024,
+  IIT_STRUCT6,
+  IIT_STRUCT7,
+  IIT_STRUCT8,
 };
 
 static void DecodeIITType(unsigned &NextElt, ArrayRef<unsigned char> Infos,
@@ -695,6 +696,9 @@ static void DecodeIITType(unsigned &NextElt, ArrayRef<unsigned char> Infos,
     return;
   case IIT_TOKEN:
     OutputTable.push_back(IITDescriptor::get(IITDescriptor::Token, 0));
+    return;
+  case IIT_DEP:
+    OutputTable.push_back(IITDescriptor::get(IITDescriptor::Dep, 0));
     return;
   case IIT_METADATA:
     OutputTable.push_back(IITDescriptor::get(IITDescriptor::Metadata, 0));
@@ -888,6 +892,7 @@ static Type *DecodeFixedType(ArrayRef<Intrinsic::IITDescriptor> &Infos,
   case IITDescriptor::VarArg: return Type::getVoidTy(Context);
   case IITDescriptor::MMX: return Type::getX86_MMXTy(Context);
   case IITDescriptor::Token: return Type::getTokenTy(Context);
+  case IITDescriptor::Dep: return Type::getDepTy(Context);
   case IITDescriptor::Metadata: return Type::getMetadataTy(Context);
   case IITDescriptor::Half: return Type::getHalfTy(Context);
   case IITDescriptor::Float: return Type::getFloatTy(Context);
@@ -1030,6 +1035,7 @@ bool Intrinsic::matchIntrinsicType(Type *Ty, ArrayRef<Intrinsic::IITDescriptor> 
     case IITDescriptor::VarArg: return true;
     case IITDescriptor::MMX:  return !Ty->isX86_MMXTy();
     case IITDescriptor::Token: return !Ty->isTokenTy();
+    case IITDescriptor::Dep: return !Ty->isDepTy();
     case IITDescriptor::Metadata: return !Ty->isMetadataTy();
     case IITDescriptor::Half: return !Ty->isHalfTy();
     case IITDescriptor::Float: return !Ty->isFloatTy();

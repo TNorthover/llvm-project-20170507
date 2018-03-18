@@ -202,7 +202,10 @@ namespace llvm {
       MAX_ALLOWED_VALUETYPE = 128,
 
       // A value of type llvm::TokenTy
-      token          = 248,
+      token          = 247,
+
+      // A value of type llvm::DepTy
+      dep            = 248,
 
       // This is MDNode or MDString.
       Metadata       = 249,
@@ -628,6 +631,7 @@ namespace llvm {
       case Other:
         llvm_unreachable("Value type is non-standard value, Other.");
       case iPTR:
+      case dep:
         llvm_unreachable("Value type size is target-dependent. Ask TLI.");
       case iPTRAny:
       case iAny:

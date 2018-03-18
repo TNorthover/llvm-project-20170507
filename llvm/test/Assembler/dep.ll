@@ -62,3 +62,32 @@ define %myStruct @test_insert_extract(%myStruct* %ptr) {
   %res = insertvalue %myStruct undef, dep %dep_field, 1
   ret %myStruct %res
 }
+
+define float @chase_dep(i8* %ptr) {
+; CHECK-LABEL: define float @chase_dep(i8* %ptr) {
+
+  %cell0 = call { i8*, dep } @llvm.consume.load.p0i8.p0i8(i8* %ptr)
+  %field.addr = extractvalue { i8*, dep } %cell0, 0
+  %dep0 = extractvalue { i8*, dep } %cell0, 1
+
+  %cell1 = call { i8*, dep } @llvm.consume.dependent.load.p0i8.p0i8(i8* %field.addr, dep %dep0)
+  %float.addr = extractvalue { i8*, dep } %cell1, 0
+  %dep1 = extractvalue { i8*, dep } %cell1, 1
+
+  %res = call float @llvm.dependent.load.f32.p0i8(i8* %float.addr, dep %dep1)
+
+  ret float %res
+}
+
+define dep @test_combine(dep %a, dep %b) {
+; CHECK-LABEL: define dep @test_combine(dep %a, dep %b) {
+; CHECK: %res = call dep @llvm.combine.deps(dep %a, dep %b)
+
+  %res = call dep @llvm.combine.deps(dep %a, dep %b)
+  ret dep %res
+}
+
+declare { i8*, dep } @llvm.consume.load.p0i8.p0i8(i8*)
+declare { i8*, dep } @llvm.consume.dependent.load.p0i8.p0i8(i8*, dep)
+declare float @llvm.dependent.load.f32.p0i8(i8*, dep)
+declare dep @llvm.combine.deps(dep, dep)

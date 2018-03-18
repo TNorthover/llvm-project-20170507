@@ -190,6 +190,7 @@ def llvm_empty_ty      : LLVMType<OtherVT>;                       // { }
 def llvm_descriptor_ty : LLVMPointerType<llvm_empty_ty>;          // { }*
 def llvm_metadata_ty   : LLVMType<MetadataVT>;                    // !{...}
 def llvm_token_ty      : LLVMType<token>;                         // token
+def llvm_dep_ty        : LLVMType<dep>;                           // dep
 
 def llvm_x86mmx_ty     : LLVMType<x86mmx>;
 def llvm_ptrx86mmx_ty  : LLVMPointerType<llvm_x86mmx_ty>;         // <1 x i64>*
@@ -934,6 +935,29 @@ def int_memmove_element_unordered_atomic
 def int_memset_element_unordered_atomic
     : Intrinsic<[], [ llvm_anyptr_ty, llvm_i8_ty, llvm_anyint_ty, llvm_i32_ty ],
                 [ IntrArgMemOnly, NoCapture<0>, WriteOnly<0> ]>;
+
+//===-------------------- Address dependency intrinsics -------------------===//
+//
+// These intrinsics define the key operations on LLVM's "dep" type, intended to model ... FIXME!!!!!!!!!!!!!!!!!!!
+
+// N.b. parameters must be independent anyptrs to allow for different
+// address-spaces.
+
+// FIXME: what kind of compiler barrier is implied here and how the fuck to we enforce it?
+def int_consume_load
+    : Intrinsic<[llvm_anyptr_ty, llvm_dep_ty], [llvm_anyptr_ty],
+                [IntrReadMem, IntrArgMemOnly]>;
+
+def int_dependent_load
+    : Intrinsic<[llvm_any_ty], [llvm_anyptr_ty, llvm_dep_ty],
+                [IntrReadMem, IntrArgMemOnly]>;
+
+def int_consume_dependent_load
+    : Intrinsic<[llvm_anyptr_ty, llvm_dep_ty], [llvm_anyptr_ty, llvm_dep_ty],
+                [IntrReadMem, IntrArgMemOnly]>;
+
+def int_combine_deps
+    : Intrinsic<[llvm_dep_ty], [llvm_dep_ty, llvm_dep_ty], [IntrNoMem]>;
 
 //===------------------------ Reduction Intrinsics ------------------------===//
 //

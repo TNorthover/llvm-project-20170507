@@ -295,6 +295,7 @@ MVT MVT::getVT(Type *Ty, bool HandleUnknown){
   case Type::FP128TyID:     return MVT(MVT::f128);
   case Type::PPC_FP128TyID: return MVT(MVT::ppcf128);
   case Type::PointerTyID:   return MVT(MVT::iPTR);
+  case Type::DepTyID:       return MVT(MVT::dep);
   case Type::VectorTyID: {
     VectorType *VTy = cast<VectorType>(Ty);
     return getVectorVT(
