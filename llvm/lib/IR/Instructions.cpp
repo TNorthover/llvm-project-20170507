@@ -11,7 +11,7 @@
 // classes.
 //
 //===----------------------------------------------------------------------===//
-
+// FIXME: ban/allow deps in some insts!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
 #include "llvm/IR/Instructions.h"
 #include "LLVMContextImpl.h"
 #include "llvm/ADT/None.h"

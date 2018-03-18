@@ -674,6 +674,8 @@ unsigned DataLayout::getAlignment(Type *Ty, bool abi_or_pref) const {
   assert(Ty->isSized() && "Cannot getTypeInfo() on a type that is unsized!");
   switch (Ty->getTypeID()) {
   // Early escape for the non-numeric types.
+  case Type::DepTyID:
+    // FIXME: Assuming AS == 0 is dirty. Might want a separate DataLayout field.
   case Type::LabelTyID:
     return (abi_or_pref
             ? getPointerABIAlignment(0)

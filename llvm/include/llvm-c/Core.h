@@ -154,7 +154,8 @@ typedef enum {
   LLVMVectorTypeKind,      /**< SIMD 'packed' format, or other vector type */
   LLVMMetadataTypeKind,    /**< Metadata */
   LLVMX86_MMXTypeKind,     /**< X86 MMX */
-  LLVMTokenTypeKind        /**< Tokens */
+  LLVMTokenTypeKind,       /**< Tokens */
+  LLVMDepTypeKind          /**< Address dependencies */
 } LLVMTypeKind;
 
 typedef enum {
@@ -1344,6 +1345,11 @@ LLVMTypeRef LLVMX86MMXTypeInContext(LLVMContextRef C);
  * Create a token type in a context.
  */
 LLVMTypeRef LLVMTokenTypeInContext(LLVMContextRef C);
+
+  /**
+ * Create a dep type in a context.
+ */
+LLVMTypeRef LLVMDepTypeInContext(LLVMContextRef C);
 
 /**
  * Create a metadata type in a context.

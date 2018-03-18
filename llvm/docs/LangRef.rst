@@ -2710,6 +2710,20 @@ As such, it is not appropriate to have a :ref:`phi <i_phi>` or
 
       token
 
+.. _t_dep:
+
+Dep Type
+^^^^^^^^
+
+:Overview:
+
+The dep type is an address-dependency token derp derp derp.
+
+:Syntax:
+
+::
+
+      dep
 
 
 .. _t_metadata:

@@ -426,9 +426,10 @@ int FunctionComparator::cmpTypes(Type *TyL, Type *TyR) const {
   case Type::LabelTyID:
   case Type::MetadataTyID:
   case Type::TokenTyID:
-    return 0;
+  case Type::DepTyID:
+   return 0;
 
-  case Type::PointerTyID:
+      case Type::PointerTyID:
     assert(PTyL && PTyR && "Both types must be pointers here.");
     return cmpNumbers(PTyL->getAddressSpace(), PTyR->getAddressSpace());
 

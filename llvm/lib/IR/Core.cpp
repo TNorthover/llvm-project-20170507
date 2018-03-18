@@ -494,6 +494,8 @@ LLVMTypeKind LLVMGetTypeKind(LLVMTypeRef Ty) {
     return LLVMX86_MMXTypeKind;
   case Type::TokenTyID:
     return LLVMTokenTypeKind;
+  case Type::DepTyID:
+    return LLVMDepTypeKind;
   }
   llvm_unreachable("Unhandled TypeID.");
 }
@@ -765,6 +767,9 @@ LLVMTypeRef LLVMLabelTypeInContext(LLVMContextRef C) {
 }
 LLVMTypeRef LLVMTokenTypeInContext(LLVMContextRef C) {
   return wrap(Type::getTokenTy(*unwrap(C)));
+}
+LLVMTypeRef LLVMDepTypeInContext(LLVMContextRef C) {
+  return wrap(Type::getDepTy(*unwrap(C)));
 }
 LLVMTypeRef LLVMMetadataTypeInContext(LLVMContextRef C) {
   return wrap(Type::getMetadataTy(*unwrap(C)));
