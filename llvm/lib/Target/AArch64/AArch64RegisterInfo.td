@@ -21,6 +21,7 @@ class AArch64Reg<bits<16> enc, string n, list<Register> subregs = [],
 
 let Namespace = "AArch64" in {
   def sub_32 : SubRegIndex<32>;
+  def sub_dep : SubRegIndex<64>;
 
   def bsub : SubRegIndex<8>;
   def hsub : SubRegIndex<16>;
@@ -128,7 +129,39 @@ def SP    : AArch64Reg<31, "sp",  [WSP]>, DwarfRegAlias<WSP>;
 def XZR   : AArch64Reg<31, "xzr", [WZR]>, DwarfRegAlias<WSP>;
 }
 
-// Condition code register.
+let SubRegIndices = [sub_dep] in {
+def DEP0    : AArch64Reg<1,   "dep0",  [X0]>, DwarfRegAlias<W0>;
+def DEP1    : AArch64Reg<1,   "dep1",  [X1]>, DwarfRegAlias<W1>;
+def DEP2    : AArch64Reg<2,   "dep2",  [X2]>, DwarfRegAlias<W2>;
+def DEP3    : AArch64Reg<3,   "dep3",  [X3]>, DwarfRegAlias<W3>;
+def DEP4    : AArch64Reg<4,   "dep4",  [X4]>, DwarfRegAlias<W4>;
+def DEP5    : AArch64Reg<5,   "dep5",  [X5]>, DwarfRegAlias<W5>;
+def DEP6    : AArch64Reg<6,   "dep6",  [X6]>, DwarfRegAlias<W6>;
+def DEP7    : AArch64Reg<7,   "dep7",  [X7]>, DwarfRegAlias<W7>;
+def DEP8    : AArch64Reg<8,   "dep8",  [X8]>, DwarfRegAlias<W8>;
+def DEP9    : AArch64Reg<9,   "dep9",  [X9]>, DwarfRegAlias<W9>;
+def DEP10   : AArch64Reg<10, "dep10", [X10]>, DwarfRegAlias<W10>;
+def DEP11   : AArch64Reg<11, "dep11", [X11]>, DwarfRegAlias<W11>;
+def DEP12   : AArch64Reg<12, "dep12", [X12]>, DwarfRegAlias<W12>;
+def DEP13   : AArch64Reg<13, "dep13", [X13]>, DwarfRegAlias<W13>;
+def DEP14   : AArch64Reg<14, "dep14", [X14]>, DwarfRegAlias<W14>;
+def DEP15   : AArch64Reg<15, "dep15", [X15]>, DwarfRegAlias<W15>;
+def DEP16   : AArch64Reg<16, "dep16", [X16]>, DwarfRegAlias<W16>;
+def DEP17   : AArch64Reg<17, "dep17", [X17]>, DwarfRegAlias<W17>;
+def DEP18   : AArch64Reg<18, "dep18", [X18]>, DwarfRegAlias<W18>;
+def DEP19   : AArch64Reg<19, "dep19", [X19]>, DwarfRegAlias<W19>;
+def DEP20   : AArch64Reg<20, "dep20", [X20]>, DwarfRegAlias<W20>;
+def DEP21   : AArch64Reg<21, "dep21", [X21]>, DwarfRegAlias<W21>;
+def DEP22   : AArch64Reg<22, "dep22", [X22]>, DwarfRegAlias<W22>;
+def DEP23   : AArch64Reg<23, "dep23", [X23]>, DwarfRegAlias<W23>;
+def DEP24   : AArch64Reg<24, "dep24", [X24]>, DwarfRegAlias<W24>;
+def DEP25   : AArch64Reg<25, "dep25", [X25]>, DwarfRegAlias<W25>;
+def DEP26   : AArch64Reg<26, "dep26", [X26]>, DwarfRegAlias<W26>;
+def DEP27   : AArch64Reg<27, "dep27", [X27]>, DwarfRegAlias<W27>;
+def DEP28   : AArch64Reg<28, "dep28", [X28]>, DwarfRegAlias<W28>;
+}
+
+// Condition code register
 def NZCV  : AArch64Reg<0, "nzcv">;
 
 // First fault status register
@@ -154,6 +187,8 @@ def GPR64 : RegisterClass<"AArch64", [i64], 64, (add GPR64common, XZR)> {
   let AltOrders = [(rotl GPR64, 8)];
   let AltOrderSelect = [{ return 1; }];
 }
+
+def DEP64 : RegisterClass<"AArch64", [dep64], 64, (sequence "DEP%u", 0, 28)>;
 
 // GPR register classes which include SP/WSP.
 def GPR32sp : RegisterClass<"AArch64", [i32], 32, (add GPR32common, WSP)> {

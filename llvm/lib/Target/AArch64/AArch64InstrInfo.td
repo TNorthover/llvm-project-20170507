@@ -6375,5 +6375,31 @@ def : Pat<(AArch64tcret tglobaladdr:$dst, (i32 timm:$FPDiff)),
 def : Pat<(AArch64tcret texternalsym:$dst, (i32 timm:$FPDiff)),
           (TCRETURNdi texternalsym:$dst, imm:$FPDiff)>;
 
+let mayLoad = 1 in {
+  def LDRConsume : Pseudo<(outs GPR64:$dst, DEP64:$dep), (ins GPR64:$src), []>,
+                   Sched<[]>;
+  def LDRDependentS : Pseudo<(outs FPR32:$dst), (ins GPR64:$addr, DEP64:$dep),
+                            []>, Sched<[]>;
+
+  def LDRConsumeDependent : Pseudo<(outs GPR64:$dst_addr, DEP64:$dst_dep),
+                                   (ins GPR64:$src_addr, DEP64:$src_dep), []>,
+                            Sched<[]>;
+
+  def CombineDeps : Pseudo<(outs DEP64:$Rd), (ins DEP64:$Rn, DEP64:$Rm), []>,
+                    Sched<[]>;
+  def CopyDep : Pseudo<(outs DEP64:$Rd), (ins DEP64:$Rn), []>, Sched<[]>;
+}
+
+def : Pat<(int_consume_load i64:$addr),
+          (LDRConsume i64:$addr)>;
+
+def : Pat<(int_consume_dependent_load i64:$addr, dep64:$dep),
+          (LDRConsumeDependent i64:$addr, dep64:$dep)>;
+
+def : Pat<(f32 (int_dependent_load i64:$addr, dep64:$dep)),
+          (LDRDependentS i64:$addr, dep64:$dep)>;
+
+def : Pat<(dep64 (int_combine_deps dep64:$Rn, dep64:$Rm)), (CombineDeps $Rn, $Rm)>;
+
 include "AArch64InstrAtomics.td"
 include "AArch64SVEInstrInfo.td"

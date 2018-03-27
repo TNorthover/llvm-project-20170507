@@ -2529,6 +2529,12 @@ void AArch64InstrInfo::copyPhysReg(MachineBasicBlock &MBB,
     return;
   }
 
+  if (AArch64::DEP64RegClass.contains(DestReg)) {
+    assert(AArch64::DEP64RegClass.contains(SrcReg));
+    BuildMI(MBB, I, DL, get(AArch64::CopyDep), DestReg).addReg(SrcReg);
+    return;
+  }
+
   // Copy a DDDD register quad by copying the individual sub-registers.
   if (AArch64::DDDDRegClass.contains(DestReg) &&
       AArch64::DDDDRegClass.contains(SrcReg)) {

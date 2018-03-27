@@ -1061,6 +1061,11 @@ public:
     // Lower scalar pointers to native pointer types.
     if (PointerType *PTy = dyn_cast<PointerType>(Ty))
       return getPointerTy(DL, PTy->getAddressSpace());
+    
+    if (Ty->isDepTy()) {
+      assert(DL.getPointerSize() == 8 && "possibly wrong dep size");
+      return MVT::dep64;
+    }
 
     if (Ty->isVectorTy()) {
       VectorType *VTy = cast<VectorType>(Ty);

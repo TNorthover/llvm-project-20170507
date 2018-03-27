@@ -252,7 +252,17 @@ void TypeSetByHwMode::dump() const {
 
 bool TypeSetByHwMode::intersect(SetType &Out, const SetType &In) {
   bool OutP = Out.count(MVT::iPTR), InP = In.count(MVT::iPTR);
-  auto Int = [&In](MVT T) -> bool { return !In.count(T); };
+  std::function<bool(MVT)> Int = [&In](MVT T) -> bool { return !In.count(T); };
+
+  // FIXME: wrong when dep32 gets added!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+  bool InDep = In.count(MVT::dep), OutDep = Out.count(MVT::dep);
+  if ((InDep || OutDep) && !(InDep && OutDep)) {
+    if (In.count(MVT::dep64) || Out.count(MVT::dep64)) {
+      Out.erase(MVT::dep);
+      Out.insert(MVT::dep64);
+      Int = [&In](MVT T) -> bool { return !In.count(T) && T != MVT::dep64; };
+    }
+  }
 
   if (OutP == InP)
     return berase_if(Out, Int);

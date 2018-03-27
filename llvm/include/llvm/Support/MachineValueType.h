@@ -193,19 +193,22 @@ namespace llvm {
 
       ExceptRef      = 113,    // WebAssembly's except_ref type
 
+      // A value of type llvm::DepTy
+      dep64          = 114,
+
       FIRST_VALUETYPE = 1,     // This is always the beginning of the list.
-      LAST_VALUETYPE =  114,   // This always remains at the end of the list.
+      LAST_VALUETYPE =  115,   // This always remains at the end of the list.
 
       // This is the current maximum for LAST_VALUETYPE.
       // MVT::MAX_ALLOWED_VALUETYPE is used for asserts and to size bit vectors
       // This value must be a multiple of 32.
       MAX_ALLOWED_VALUETYPE = 128,
 
-      // A value of type llvm::TokenTy
-      token          = 247,
+      // A generic dependency-token type for intrinsics to use at IR level.
+      dep            = 247,
 
-      // A value of type llvm::DepTy
-      dep            = 248,
+      // A value of type llvm::TokenTy
+      token          = 248,
 
       // This is MDNode or MDString.
       Metadata       = 249,
@@ -681,6 +684,7 @@ namespace llvm {
       case x86mmx:
       case f64 :
       case i64 :
+      case dep64:
       case v64i1:
       case v8i8:
       case v4i16:

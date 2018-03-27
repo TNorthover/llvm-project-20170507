@@ -129,6 +129,7 @@ AArch64TargetLowering::AArch64TargetLowering(const TargetMachine &TM,
   // Set up the register classes.
   addRegisterClass(MVT::i32, &AArch64::GPR32allRegClass);
   addRegisterClass(MVT::i64, &AArch64::GPR64allRegClass);
+  addRegisterClass(MVT::dep64, &AArch64::DEP64RegClass);
 
   if (Subtarget->hasFPARMv8()) {
     addRegisterClass(MVT::f16, &AArch64::FPR16RegClass);
@@ -2891,6 +2892,8 @@ SDValue AArch64TargetLowering::LowerFormalArguments(
         RC = &AArch64::GPR32RegClass;
       else if (RegVT == MVT::i64)
         RC = &AArch64::GPR64RegClass;
+      else if (RegVT == MVT::dep64)
+        RC = &AArch64::GPR64RegClass; // FIXME: Need dependent register class!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       else if (RegVT == MVT::f16)
         RC = &AArch64::FPR16RegClass;
       else if (RegVT == MVT::f32)

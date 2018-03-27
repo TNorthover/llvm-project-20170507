@@ -8853,9 +8853,10 @@ void SelectionDAGISel::LowerArguments(const Function &F) {
           TLI->getRegisterTypeForCallingConv(*CurDAG->getContext(), VT);
       unsigned NumRegs =
           TLI->getNumRegistersForCallingConv(*CurDAG->getContext(), VT);
+      unsigned Stride = NumRegs > 1 ? RegisterVT.getStoreSize() : 0;
       for (unsigned i = 0; i != NumRegs; ++i) {
-        ISD::InputArg MyFlags(Flags, RegisterVT, VT, isArgValueUsed,
-                              ArgNo, PartBase+i*RegisterVT.getStoreSize());
+        ISD::InputArg MyFlags(Flags, RegisterVT, VT, isArgValueUsed, ArgNo,
+                              PartBase + i * Stride);
         if (NumRegs > 1 && i == 0)
           MyFlags.Flags.setSplit();
         // if it isn't first piece, alignment must be 1
@@ -8868,7 +8869,7 @@ void SelectionDAGISel::LowerArguments(const Function &F) {
       }
       if (NeedsRegBlock && Value == NumValues - 1)
         Ins[Ins.size() - 1].Flags.setInConsecutiveRegsLast();
-      PartBase += VT.getStoreSize();
+      PartBase += Stride;
     }
   }
 

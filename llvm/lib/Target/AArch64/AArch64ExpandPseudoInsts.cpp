@@ -765,6 +765,7 @@ bool AArch64ExpandPseudo::expandMI(MachineBasicBlock &MBB,
                                    MachineBasicBlock::iterator MBBI,
                                    MachineBasicBlock::iterator &NextMBBI) {
   MachineInstr &MI = *MBBI;
+  auto &TRI = TII->getRegisterInfo();
   unsigned Opcode = MI.getOpcode();
   switch (Opcode) {
   default:
@@ -964,6 +965,64 @@ bool AArch64ExpandPseudo::expandMI(MachineBasicBlock &MBB,
       .add(MI.getOperand(0))
       .add(MI.getOperand(1));
     transferImpOps(MI, MIB, MIB);
+    MI.eraseFromParent();
+    return true;
+   }
+  case AArch64::CopyDep: {
+    unsigned DstX = TRI.getSubReg(MI.getOperand(0).getReg(), AArch64::sub_dep);
+    BuildMI(MBB, MBBI, MI.getDebugLoc(), TII->get(AArch64::ORRXrs), DstX)
+        .addReg(AArch64::XZR)
+        .addReg(TRI.getSubReg(MI.getOperand(1).getReg(), AArch64::sub_dep))
+        .addImm(0);
+    MI.eraseFromParent();
+    return true;
+   }
+  case AArch64::CombineDeps: {
+    unsigned DstX = TRI.getSubReg(MI.getOperand(0).getReg(), AArch64::sub_dep);
+    BuildMI(MBB, MBBI, MI.getDebugLoc(), TII->get(AArch64::ORRXrs), DstX)
+        .addReg(TRI.getSubReg(MI.getOperand(1).getReg(), AArch64::sub_dep))
+        .addReg(TRI.getSubReg(MI.getOperand(2).getReg(), AArch64::sub_dep))
+        .addImm(0);
+    MI.eraseFromParent();
+    return true;
+   }
+  case AArch64::LDRConsume: {
+    unsigned Dst = MI.getOperand(0).getReg();
+    unsigned TokX = TRI.getSubReg(MI.getOperand(1).getReg(), AArch64::sub_dep);
+    BuildMI(MBB, MBBI, MI.getDebugLoc(), TII->get(AArch64::LDRXui), Dst)
+        .addReg(MI.getOperand(2).getReg())
+        .addImm(0);
+    BuildMI(MBB, MBBI, MI.getDebugLoc(), TII->get(AArch64::EORXrs), TokX)
+        .addReg(Dst)
+        .addReg(Dst)
+        .addImm(0);
+    MI.eraseFromParent();
+    return true;
+  }
+  case AArch64::LDRConsumeDependent: {
+     unsigned Dst = MI.getOperand(0).getReg();
+     unsigned DstX = TRI.getSubReg(MI.getOperand(1).getReg(), AArch64::sub_dep);
+     unsigned SrcX = TRI.getSubReg(MI.getOperand(3).getReg(), AArch64::sub_dep);
+
+     BuildMI(MBB, MBBI, MI.getDebugLoc(), TII->get(AArch64::LDRXroX), Dst)
+         .addReg(MI.getOperand(2).getReg())
+         .addReg(SrcX)
+         .addImm(0)
+         .addImm(0);
+     BuildMI(MBB, MBBI, MI.getDebugLoc(), TII->get(AArch64::EORXrs), DstX)
+         .addReg(Dst)
+         .addReg(Dst)
+         .addImm(0);
+     MI.eraseFromParent();
+     return true;
+   }
+  case AArch64::LDRDependentS: {
+    BuildMI(MBB, MBBI, MI.getDebugLoc(), TII->get(AArch64::LDRSroX),
+            MI.getOperand(0).getReg())
+        .addReg(MI.getOperand(1).getReg())
+        .addReg(TRI.getSubReg(MI.getOperand(2).getReg(), AArch64::sub_dep))
+        .addImm(0)
+        .addImm(0);
     MI.eraseFromParent();
     return true;
    }

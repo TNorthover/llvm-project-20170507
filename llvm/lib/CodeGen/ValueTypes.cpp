@@ -193,6 +193,7 @@ std::string EVT::getEVTString() const {
   case MVT::Metadata:return "Metadata";
   case MVT::Untyped: return "Untyped";
   case MVT::ExceptRef: return "ExceptRef";
+  case MVT::dep64:   return "dep64";
   }
 }
 
@@ -272,7 +273,8 @@ Type *EVT::getTypeForEVT(LLVMContext &Context) const {
   case MVT::v4f64:   return VectorType::get(Type::getDoubleTy(Context), 4);
   case MVT::v8f64:   return VectorType::get(Type::getDoubleTy(Context), 8);
   case MVT::Metadata: return Type::getMetadataTy(Context);
- }
+  case MVT::dep64:   return Type::getDepTy(Context);
+  }
 }
 
 /// Return the value type corresponding to the specified type.  This returns all
@@ -295,7 +297,6 @@ MVT MVT::getVT(Type *Ty, bool HandleUnknown){
   case Type::FP128TyID:     return MVT(MVT::f128);
   case Type::PPC_FP128TyID: return MVT(MVT::ppcf128);
   case Type::PointerTyID:   return MVT(MVT::iPTR);
-  case Type::DepTyID:       return MVT(MVT::dep);
   case Type::VectorTyID: {
     VectorType *VTy = cast<VectorType>(Ty);
     return getVectorVT(
