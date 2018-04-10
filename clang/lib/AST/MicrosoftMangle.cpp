@@ -1927,7 +1927,8 @@ void MicrosoftCXXNameMangler::mangleType(const BuiltinType *T, Qualifiers,
     break;
 
   case BuiltinType::Char8:
-  case BuiltinType::Float128: {
+  case BuiltinType::Float128:
+  case BuiltinType::ConsumeDependency: {
     DiagnosticsEngine &Diags = Context.getDiags();
     unsigned DiagID = Diags.getCustomDiagID(
         DiagnosticsEngine::Error, "cannot mangle this built-in %0 type yet");

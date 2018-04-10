@@ -939,6 +939,9 @@ namespace serialization {
       /// The C++ 'char8_t' type.
       PREDEF_TYPE_CHAR8_ID = 45,
 
+      /// The '__consume_token' type FIXME:!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+      PREDEF_TYPE_CONSUME_DEPENDENCY_ID = 46,
+
       /// OpenCL image types with auto numeration
 #define IMAGE_TYPE(ImgType, Id, SingletonId, Access, Suffix) \
       PREDEF_TYPE_##Id##_ID,

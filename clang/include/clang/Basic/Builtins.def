@@ -678,6 +678,11 @@ BUILTIN(__c11_atomic_thread_fence, "vi", "n")
 BUILTIN(__c11_atomic_signal_fence, "vi", "n")
 BUILTIN(__c11_atomic_is_lock_free, "iz", "n")
 
+BUILTIN(__c11_atomic_consume_load, "v.", "t")
+BUILTIN(__c11_atomic_dependent_load, "v.", "t")
+BUILTIN(__c11_atomic_consume_dependent_load, "v.", "t")
+BUILTIN(__c11_atomic_combine_dependencies, "v.", "t")
+
 // GNU atomic builtins.
 ATOMIC_BUILTIN(__atomic_load, "v.", "t")
 ATOMIC_BUILTIN(__atomic_load_n, "v.", "t")

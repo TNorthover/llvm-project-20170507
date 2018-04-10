@@ -184,6 +184,10 @@ BUILTIN_TYPE(OCLReserveID, OCLReserveIDTy)
 // theoretically deducible.
 BUILTIN_TYPE(Dependent, DependentTy)
 
+// This is an opaque token carrying an address dependency from an atomic
+// load-consume to its use.
+BUILTIN_TYPE(ConsumeDependency, ConsumeDependencyTy)
+
 // The type of an unresolved overload set.  A placeholder type.
 // Expressions with this type have one of the following basic
 // forms, with parentheses generally permitted:

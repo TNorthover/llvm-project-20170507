@@ -697,19 +697,18 @@ void USRGenerator::VisitType(QualType T) {
           c = 'Q'; break;
         case BuiltinType::NullPtr:
           c = 'n'; break;
+        case BuiltinType::ConsumeDependency:
+          c = 'd'; break;
 #define BUILTIN_TYPE(Id, SingletonId)
 #define PLACEHOLDER_TYPE(Id, SingletonId) case BuiltinType::Id:
 #include "clang/AST/BuiltinTypes.def"
-        case BuiltinType::Dependent:
+              case BuiltinType::Dependent :
 #define IMAGE_TYPE(ImgType, Id, SingletonId, Access, Suffix) \
         case BuiltinType::Id:
 #include "clang/Basic/OpenCLImageTypes.def"
-        case BuiltinType::OCLEvent:
-        case BuiltinType::OCLClkEvent:
-        case BuiltinType::OCLQueue:
-        case BuiltinType::OCLReserveID:
-        case BuiltinType::OCLSampler:
-          IgnoreResults = true;
+              case BuiltinType::OCLEvent : case BuiltinType::OCLClkEvent
+              : case BuiltinType::OCLQueue : case BuiltinType::OCLReserveID
+              : case BuiltinType::OCLSampler : IgnoreResults = true;
           return;
         case BuiltinType::ObjCId:
           c = 'o'; break;

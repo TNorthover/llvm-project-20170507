@@ -1424,6 +1424,9 @@ static QualType ConvertDeclSpecToType(TypeProcessingState &state) {
     Result = Context.IntTy;
     declarator.setInvalidType(true);
     break;
+  case DeclSpec::TST_consume_dependency:
+    Result = Context.ConsumeDependencyTy;
+    break;
   case DeclSpec::TST_class:
   case DeclSpec::TST_enum:
   case DeclSpec::TST_union:

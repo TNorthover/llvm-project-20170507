@@ -6825,6 +6825,9 @@ QualType ASTReader::GetType(TypeID ID) {
     case PREDEF_TYPE_FLOAT128_ID:
       T = Context.Float128Ty;
       break;
+    case PREDEF_TYPE_CONSUME_DEPENDENCY_ID:
+      T = Context.ConsumeDependencyTy;
+      break;
     case PREDEF_TYPE_OVERLOAD_ID:
       T = Context.OverloadTy;
       break;

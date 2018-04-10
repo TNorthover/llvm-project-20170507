@@ -1138,6 +1138,9 @@ void ASTContext::InitBuiltinTypes(const TargetInfo &Target,
   InitBuiltinType(Int128Ty,            BuiltinType::Int128);
   InitBuiltinType(UnsignedInt128Ty,    BuiltinType::UInt128);
 
+  // Atomic load-consume dependency token
+  InitBuiltinType(ConsumeDependencyTy, BuiltinType::ConsumeDependency);
+
   // C++ 3.9.1p5
   if (TargetInfo::isTypeSigned(Target.getWCharType()))
     InitBuiltinType(WCharTy,           BuiltinType::WChar_S);
@@ -1814,6 +1817,10 @@ TypeInfo ASTContext::getTypeInfoImpl(const Type *T) const {
     case BuiltinType::ObjCClass:
     case BuiltinType::ObjCSel:
       Width = Target->getPointerWidth(0); 
+      Align = Target->getPointerAlign(0);
+      break;
+    case BuiltinType::ConsumeDependency:
+      Width = Target->getPointerWidth(0);
       Align = Target->getPointerAlign(0);
       break;
     case BuiltinType::OCLSampler:
@@ -6222,6 +6229,7 @@ static char getObjCEncodingForPrimitiveKind(const ASTContext *C,
     case BuiltinType::Float16:
     case BuiltinType::Float128:
     case BuiltinType::Half:
+    case BuiltinType::ConsumeDependency:
       // FIXME: potentially need @encodes for these!
       return ' ';
 

@@ -3182,8 +3182,9 @@ enum CXTypeKind {
   CXType_Float128 = 30,
   CXType_Half = 31,
   CXType_Float16 = 32,
+  CXType_ConsumeDependency = 32,
   CXType_FirstBuiltin = CXType_Void,
-  CXType_LastBuiltin  = CXType_Float16,
+  CXType_LastBuiltin  = CXType_ConsumeDependency,
 
   CXType_Complex = 100,
   CXType_Pointer = 101,

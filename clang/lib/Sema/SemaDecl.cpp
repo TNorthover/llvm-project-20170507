@@ -134,6 +134,7 @@ bool Sema::isSimpleTypeSpecifier(tok::TokenKind Kind) const {
   case tok::kw_double:
   case tok::kw__Float16:
   case tok::kw___float128:
+  case tok::kw___consume_dependency:
   case tok::kw_wchar_t:
   case tok::kw_bool:
   case tok::kw___underlying_type:
